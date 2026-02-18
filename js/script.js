@@ -5,11 +5,11 @@ function generateId() {
 const todoForm = document.getElementById('todo-form');
 const todoInput = document.getElementById('todo-input');
 const dateInput = document.getElementById('date-input');
-const todoList = document.getElementById('todo-list');
-const filterBtns = document.querySelectorAll('.filter-btn');
+const todoListAll = document.getElementById('list-all');
+const todoListPending = document.getElementById('list-pending');
+const todoListCompleted = document.getElementById('list-completed');
 
 let todos = JSON.parse(localStorage.getItem('todos')) || [];
-let currentFilter = 'all';
 
 document.addEventListener('DOMContentLoaded', () => {
     const today = new Date().toISOString().split('T')[0];
@@ -18,16 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 todoForm.addEventListener('submit', handleAddTodo);
-
-filterBtns.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        
-        currentFilter = e.target.dataset.filter;
-        renderTodos();
-    });
-});
 
 function handleAddTodo(e) {
     e.preventDefault();
@@ -79,41 +69,53 @@ function resetForm() {
     todoForm.reset();
 }
 
+function createTodoElement(todo) {
+    const li = document.createElement('li');
+    li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+    
+    li.innerHTML = `
+        <button class="todo-check" onclick="toggleTodo('${todo.id}')">
+            <i class="fa-solid fa-check"></i>
+        </button>
+        <div class="todo-content">
+            <span class="todo-text">${escapeHtml(todo.text)}</span>
+            <span class="todo-date">
+                <i class="fa-regular fa-calendar"></i> ${formatDate(todo.date)}
+            </span>
+        </div>
+        <button class="delete-btn" onclick="deleteTodo('${todo.id}')">
+            <i class="fa-solid fa-trash"></i>
+        </button>
+    `;
+    return li;
+}
+
 function renderTodos() {
-    todoList.innerHTML = '';
+    todoListAll.innerHTML = '';
+    todoListPending.innerHTML = '';
+    todoListCompleted.innerHTML = '';
 
-    const filteredTodos = todos.filter(todo => {
-        if (currentFilter === 'all') return true;
-        if (currentFilter === 'pending') return !todo.completed;
-        if (currentFilter === 'completed') return todo.completed;
-    });
-
-    if (filteredTodos.length === 0) {
-        todoList.innerHTML = '<li style="text-align:center; color: var(--text-muted); padding: 1rem;">No tasks found.</li>';
+    if (todos.length === 0) {
+        // Optional: show empty state in 'All' or just leave blank
+        todoListAll.innerHTML = '<li style="text-align:center; color: var(--text-muted); padding: 1rem;">No tasks found.</li>';
         return;
     }
 
-    filteredTodos.forEach((todo, index) => {
-        const li = document.createElement('li');
-        li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-        li.style.animationDelay = `${index * 0.05}s`;
+    todos.forEach(todo => {
+        // Clone for multiple lists
+        const itemAll = createTodoElement(todo);
+        const itemPending = createTodoElement(todo); // Only if pending
+        const itemCompleted = createTodoElement(todo); // Only if completed
         
-        li.innerHTML = `
-            <button class="todo-check" onclick="toggleTodo('${todo.id}')">
-                <i class="fa-solid fa-check"></i>
-            </button>
-            <div class="todo-content">
-                <span class="todo-text">${escapeHtml(todo.text)}</span>
-                <span class="todo-date">
-                    <i class="fa-regular fa-calendar"></i> ${formatDate(todo.date)}
-                </span>
-            </div>
-            <button class="delete-btn" onclick="deleteTodo('${todo.id}')">
-                <i class="fa-solid fa-trash"></i>
-            </button>
-        `;
-        
-        todoList.appendChild(li);
+        // 1. Add to All
+        todoListAll.appendChild(itemAll);
+
+        // 2. Add to Pending or Completed
+        if (todo.completed) {
+            todoListCompleted.appendChild(itemCompleted);
+        } else {
+            todoListPending.appendChild(itemPending);
+        }
     });
 }
 

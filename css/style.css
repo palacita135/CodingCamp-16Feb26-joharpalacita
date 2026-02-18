@@ -41,7 +41,7 @@ body {
     border-radius: 16px;
     padding: 2rem;
     width: 100%;
-    max-width: 500px;
+    /* max-width removed here, handled by .dashboard-container logic */
     box-shadow: var(--glass-shadow);
 }
 
@@ -126,49 +126,38 @@ input[type="text"]:focus, input[type="date"]:focus {
     transform: translateY(-2px);
 }
 
-.list-container {
+/* Dashboard Layout */
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.task-column {
     background: rgba(15, 23, 42, 0.3);
     border-radius: 12px;
     border: 1px solid var(--border-color);
     padding: 1rem;
-    margin-top: 2rem;
-}
-
-.filter-section {
     display: flex;
-    justify-content: center;
-    gap: 0;
-    margin-bottom: 0;
-    background: transparent;
-    padding: 0;
-    border: none;
-    border-bottom: 1px solid var(--border-color);
+    flex-direction: column;
+    height: 100%;
+    min-height: 300px;
 }
 
-.filter-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    padding: 1rem 1.5rem;
-    border-radius: 8px 8px 0 0;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    flex: 1;
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-}
-
-.filter-btn.active {
-    background: rgba(15, 23, 42, 0.3);
+.task-column h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
     color: var(--primary-color);
-    border-bottom: 2px solid var(--primary-color);
-    box-shadow: none;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
 }
 
-.filter-btn:hover:not(.active) {
-    color: var(--text-color);
-    background: rgba(15, 23, 42, 0.2);
+.app-container {
+    /* Widen the main container to fit 3 columns */
+    max-width: 1200px; 
 }
 
 .todo-list {

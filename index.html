@@ -45,14 +45,24 @@
         </form>
       </div>
 
-      <div class="list-container">
-        <div class="filter-section">
-          <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="pending">Pending</button>
-          <button class="filter-btn" data-filter="completed">Completed</button>
+      <div class="dashboard-container">
+        <!-- All Tasks -->
+        <div class="task-column">
+          <h3><i class="fa-solid fa-list"></i> All Tasks</h3>
+          <ul class="todo-list" id="list-all"></ul>
         </div>
 
-        <ul class="todo-list" id="todo-list"></ul>
+        <!-- Pending Tasks -->
+        <div class="task-column">
+          <h3><i class="fa-regular fa-clock"></i> Pending</h3>
+          <ul class="todo-list" id="list-pending"></ul>
+        </div>
+
+        <!-- Completed Tasks -->
+        <div class="task-column">
+          <h3><i class="fa-solid fa-check-circle"></i> Completed</h3>
+          <ul class="todo-list" id="list-completed"></ul>
+        </div>
       </div>
     </div>
 
